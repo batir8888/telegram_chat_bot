@@ -10,7 +10,7 @@ OpenWMap=pyowm.OWM(apikeys.APIKEY)
 openai.api_key = apikeys.aikey
 engine="text-davinci-003"
 
-THEMES = ["Погода", "Физика", "ИИ"]
+THEMES = ["Погода", "Физика", "ИИ", "Об Авторе"]
 
 WEATHER_STATUSES = {}
 WEATHER_STATUSES["Thunderstorm"] = ["Гроза", "⛈"]
@@ -44,6 +44,8 @@ UNIFORM_ACCELERATED_MOVEMENT_DIRECTIONS = ('Введи значения нача
 'Введи значения начальной скорости(м/с), текущей скорости(м/с) и ускорения(м/с²) через пробел',
 'Введи значения начальной скорости(м/с), текущей скорости(м/с) и времени(с) через пробел')
 
+about_author = "Привет меня зовут Батыр, мне 16 лет. Я начинающий программист💻 и разработчик игр🎮.\n\nПишу на Python и C#. Осваиваю игровой движок Unity🖥🖱 для будущей карьеры."
+
 g = 9.8
 
 bot = telebot.TeleBot(apikeys.telegramkey)
@@ -71,7 +73,7 @@ def get_text_messages(message):
         get_keyboard(message, THEMES, "Выберите область")
 
         bot.register_next_step_handler(message, get_answer)
-        
+
 def ask(message):
     completion = openai.Completion.create(engine=engine, prompt=message.text, temperature=0.5, max_tokens=3500)
 
@@ -149,6 +151,8 @@ def get_answer(message):
     if message.text == THEMES[0]:
         bot.send_message(message.chat.id, 'Введите город', reply_markup = keyboard_hider)
         bot.register_next_step_handler(message, get_weather)
+    elif message.text == THEMES[3]:
+        bot.send_message(message.chat.id, about_author, reply_markup = keyboard_hider)
     elif message.text == THEMES[2]:
         bot.send_message(message.chat.id, 'Введите запрос', reply_markup = keyboard_hider)
         bot.register_next_step_handler(message, ask)
